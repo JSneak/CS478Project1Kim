@@ -1,7 +1,6 @@
 package com.example.cs478project1kim;
 
 import android.app.Activity;
-import android.app.Person;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,10 +18,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 
 public class Activity1 extends ComponentActivity {
 
-    protected Button button1 ; 				// the "Button 1" button in the GUI
-    protected Button button2 ; 			// the "Button 2" button in the GUI
-    protected Context context;
-    protected String PersonName;
+    protected Button button1 ;  // the "Button 1" button in the GUI
+    protected Button button2 ;  // the "Button 2" button in the GUI
+    protected Context context;  // Context for the toast notification
+    protected String PersonName;// Stores the PersonName across states
 
     /* Key into the "saved state" bundle */
     protected static final String name = "Name" ;
@@ -30,40 +29,30 @@ public class Activity1 extends ComponentActivity {
 
     ActivityResultLauncher<Intent> startActivity1Result = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
-
                 //this is where the result is returned and the logic of what to do with it goes
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode() == Activity.RESULT_OK){
                         Intent i = result.getData();
-                        Log.i("Activity1: ", "Returned result is: " + result.getResultCode());
-                        Log.i("Activity1: ", "Returned message from intent is: " + i.getStringExtra("Name"));
-                        PersonName = i.getStringExtra("Name");
+//                        Log.i("Activity1: ", "Returned result is: " + result.getResultCode());
+//                        Log.i("Activity1: ", "Returned message from intent is: " + i.getStringExtra("Name"));
+                        PersonName = i.getStringExtra("Name"); /* Storing the PersonName for later */
                     } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
+                        /* Name is Invalid */
                         Intent i = result.getData();
-                        Log.i("Activity1: ", "Returned result is: " + result.getResultCode());
-                        Log.i("Activity1: ", "Returned message from intent is: " + i.getStringExtra("Name"));
+//                        Log.i("Activity1: ", "Returned result is: " + result.getResultCode());
+//                        Log.i("Activity1: ", "Returned message from intent is: " + i.getStringExtra("Name"));
+
+
+                        /* Initalizing the Toast */
                         CharSequence text = "Invalid name: " + i.getStringExtra("Name");
                         int duration = Toast.LENGTH_LONG;
-
                         Toast toast = Toast.makeText(context, text, duration);
                         toast.show();
 
                     }
                 }
             });
-
-//    ActivityResultLauncher<Intent> startContactsActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-//            new ActivityResultCallback<ActivityResult>() {
-//
-//                //this is where the result is returned and the logic of what to do with it goes
-//                @Override
-//                public void onActivityResult(ActivityResult result) {
-//                    if(result.getResultCode() == Activity.RESULT_OK){
-//                    } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
-//                    }
-//                }
-//            });
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,7 +73,7 @@ public class Activity1 extends ComponentActivity {
             /* Set Legal Name to null */
             PersonName = null;
         } else {
-            /* Check for something here */
+            /* Update the PersonName */
             Log.i("Activity1", "Saved state retrieved") ;
             PersonName = savedInstanceState.getString(name);
         }
@@ -92,8 +81,11 @@ public class Activity1 extends ComponentActivity {
         /* Setup listeners for buttons */
         button1.setOnClickListener(activity1Listener);
         button2.setOnClickListener(contactListener);
+
+        /* Setting up context on the global scope */
         context = getApplicationContext();
     }
+
 
     public View.OnClickListener activity1Listener = v -> switchToActivity1();
 
@@ -105,63 +97,26 @@ public class Activity1 extends ComponentActivity {
     public View.OnClickListener contactListener = v -> switchToContactActivity();
 
     private void switchToContactActivity() {
-        // Creates a new Intent to insert a contact
-        Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
-        intent.putExtra(ContactsContract.Intents.Insert.NAME, PersonName);
+        if(PersonName != null) /* Check that we have a valid name */ {
+            // Creates a new Intent to insert a contact
+            Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
+            intent.putExtra(ContactsContract.Intents.Insert.NAME, PersonName);
 
-        // Sets the MIME type to match the Contacts Provider
-        intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
-        startActivity(intent);
+            // Sets the MIME type to match the Contacts Provider
+            intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+            startActivity(intent);
+        }
     }
 
-//    // This will be called when the app loses focus; save
-//    // current state
+//  This will be called when the app loses focus; save current state
     @Override
     public void onSaveInstanceState(Bundle outState) {
         // Always do this
         super.onSaveInstanceState(outState);
 
-        Log.i("Activity1 ", "Activity1 lost focus");
+//        Log.i("Activity1 ", "Activity1 lost focus");
 
         /* Save Legal Name from Activity 2 if needed */
         outState.putString(name, PersonName);
     }
-
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        Log.i("Activity1 ", "Activity1 is started");
-//    }
-//
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//        Log.i("Activity1 ", "Activity1 is restarted");
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        Log.i("Activity1 ", "Activity1 is resumed");
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        Log.i("Activity1 ", "Activity1 is paused");
-//    }
-//
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        Log.i("Activity1 ", "Activity1 is stopped");
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        Log.i("Activity1 ", "Activity1 is Destroyed");
-//    }
-
-    /* ACTION_VIEW content://contacts/people/ */
 }

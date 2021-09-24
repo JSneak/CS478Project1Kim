@@ -10,7 +10,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
 
 
@@ -23,7 +22,7 @@ public class Activity2 extends Activity {
         // Always do this
         super.onCreate(savedInstanceState);
 
-        Log.i("Activity2 ", "Activity2 is created");
+//        Log.i("Activity2 ", "Activity2 is created");
 
         // Inflate the main layout (from the res folder)
         setContentView(R.layout.activity_2);
@@ -34,7 +33,6 @@ public class Activity2 extends Activity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-
                     startActivity1(editTextPersonName.getText().toString());
                     return true;
                 }
@@ -43,67 +41,18 @@ public class Activity2 extends Activity {
         });
     }
 
-    // This will be called when the app loses focus; save
-    // current state
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        // Always do this
-        super.onSaveInstanceState(outState);
-
-        Log.i("Activity2 ", "Activity2 lost focus");
-
-        /* Save Legal Name from Activity 2 if needed */
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.i("Activity2 ", "Activity2 is started");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.i("Activity2 ", "Activity2 is restarted");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i("Activity2 ", "Activity2 is resumed");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i("Activity2 ", "Activity2 is paused");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i("Activity2 ", "Activity2 is stopped");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i("Activity2 ", "Activity2 is destroyed");
-    }
-
-
     public void startActivity1(String name) {
-        Log.i("Activity2", "Entered startActivity1");
+//        Log.i("Activity2", "Entered startActivity1");
         Intent i = new Intent();
-//        Intent intent = new Intent(Activity2.this, Activity1.class);
 
         /* Check if Name is in correct Format */
         if(onlyLetters(name) && checkIfFirstAndLast(name)) {
-            Log.i("Activity2", "onLetters True");
+//            Log.i("Activity2", "onLetters True");
             i.putExtra("Name", name);
             setResult(RESULT_OK,i) ;
         } else {
-            Log.i("Activity2", "onLetters False");
+            /* Else send the canceled */
+//            Log.i("Activity2", "onLetters False");
             i.putExtra("Name", name);
             setResult(RESULT_CANCELED,i);
         }
@@ -131,6 +80,7 @@ public class Activity2 extends Activity {
     }
 
     public boolean checkIfFirstAndLast(@NonNull String name) {
+        /* Regex to identify any spaces, whitespace, and tabs */
         String[] stringArray = (name.trim()).split("\\s+", 0);
         if(stringArray.length > 2 || stringArray.length < 2) {
             return false;
