@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textViewLegalName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="140dp"
+        android:text="@string/enter_a_legal_name"
+        android:textColorHint="#CC1F1F"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.499"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/enter_a_legal_name" />
+
+    <EditText
+        android:id="@+id/editTextPersonName"
+        android:layout_width="264dp"
+        android:layout_height="77dp"
+        android:layout_marginTop="76dp"
+        android:ems="10"
+        android:hint="@string/ex_sean_kim"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
+        android:text="@string/enter_a_legal_name"
+        android:textColorHint="#FF0000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLegalName" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

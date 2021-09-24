@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CS478Project1Kim</string>
+    <string name="welcome_text">Welcome Text</string>
+    <string name="button_one">Button One</string>
+    <string name="button_two">Button Two</string>
+    <string name="enter_a_legal_name">Enter a Legal Name</string>
+    <string name="ex_sean_kim">Ex: Sean Kim</string>
 </resources>
