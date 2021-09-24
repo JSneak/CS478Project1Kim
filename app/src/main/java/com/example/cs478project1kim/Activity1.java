@@ -22,9 +22,11 @@ public class Activity1 extends ComponentActivity {
     protected Button button2 ;  // the "Button 2" button in the GUI
     protected Context context;  // Context for the toast notification
     protected String PersonName;// Stores the PersonName across states
+    protected boolean nameState;// True: Valid Name, False: Invalid name or just launched
 
     /* Key into the "saved state" bundle */
     protected static final String name = "Name" ;
+    protected static final String validName = "State";
 
 
     ActivityResultLauncher<Intent> startActivity1Result = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -37,18 +39,14 @@ public class Activity1 extends ComponentActivity {
 //                        Log.i("Activity1: ", "Returned result is: " + result.getResultCode());
 //                        Log.i("Activity1: ", "Returned message from intent is: " + i.getStringExtra("Name"));
                         PersonName = i.getStringExtra("Name"); /* Storing the PersonName for later */
+                        nameState = true;
                     } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
                         /* Name is Invalid */
                         Intent i = result.getData();
 //                        Log.i("Activity1: ", "Returned result is: " + result.getResultCode());
 //                        Log.i("Activity1: ", "Returned message from intent is: " + i.getStringExtra("Name"));
-
-
-                        /* Initalizing the Toast */
-                        CharSequence text = "Invalid name: " + i.getStringExtra("Name");
-                        int duration = Toast.LENGTH_LONG;
-                        Toast toast = Toast.makeText(context, text, duration);
-                        toast.show();
+                        PersonName = i.getStringExtra("Name");
+                        nameState = false;
 
                     }
                 }
@@ -72,10 +70,12 @@ public class Activity1 extends ComponentActivity {
         if (savedInstanceState == null) {
             /* Set Legal Name to null */
             PersonName = null;
+            nameState = false;
         } else {
             /* Update the PersonName */
             Log.i("Activity1", "Saved state retrieved") ;
             PersonName = savedInstanceState.getString(name);
+            nameState = savedInstanceState.getBoolean(validName);
         }
 
         /* Setup listeners for buttons */
@@ -97,7 +97,7 @@ public class Activity1 extends ComponentActivity {
     public View.OnClickListener contactListener = v -> switchToContactActivity();
 
     private void switchToContactActivity() {
-        if(PersonName != null) /* Check that we have a valid name */ {
+        if(nameState) /* Check that we have a valid name */ {
             // Creates a new Intent to insert a contact
             Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
             intent.putExtra(ContactsContract.Intents.Insert.NAME, PersonName);
@@ -105,6 +105,12 @@ public class Activity1 extends ComponentActivity {
             // Sets the MIME type to match the Contacts Provider
             intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
             startActivity(intent);
+        } else {
+            /* Initializing the Toast */
+            CharSequence text = "Invalid name: " + PersonName;
+            int duration = Toast.LENGTH_LONG;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
         }
     }
 
@@ -118,5 +124,7 @@ public class Activity1 extends ComponentActivity {
 
         /* Save Legal Name from Activity 2 if needed */
         outState.putString(name, PersonName);
+        /* Save the sate from Current Activity */
+        outState.putBoolean(validName,nameState);
     }
 }
